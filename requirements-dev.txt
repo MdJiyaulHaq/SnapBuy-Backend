@@ -1,0 +1,15 @@
+-r requirements.txt
+
+# Development and Testing
+pytest==8.3.4
+pytest-cov==4.1.0
+model-bakery==1.20.4
+black==24.10.0
+flake8==7.0.0
+isort==5.13.2
+
+# Debugging and Profiling
+django-debug-toolbar==4.3.0
+django-silk==5.3.2
+flower==2.0.1
+gprof2dot==2024.6.6

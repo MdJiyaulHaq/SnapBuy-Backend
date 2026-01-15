@@ -1,0 +1,92 @@
+# Use with: docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+# Load .env.prod instead of .env for production secrets
+
+services:
+  # PostgreSQL - Production
+  db:
+    env_file:
+      - .env.prod
+    restart: always
+    # Don't expose port in production
+    ports: []
+
+  # Redis - Production
+  redis:
+    restart: always
+    ports: []
+
+  # Django - Production
+  web:
+    env_file:
+      - .env.prod
+    restart: always
+    environment:
+      DEBUG: "False"
+      # DATABASE_URL and other vars come from .env.prod
+    # Use gunicorn in production (override dev command)
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py collectstatic --noinput &&
+             gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers 4 --access-logfile - --error-logfile -"
+    # Remove volumes for production (immutable container)
+    volumes:
+      - static_volume_prod:/app/staticfiles
+      - media_volume_prod:/app/media
+    # Don't expose Django directly, go through Nginx
+    ports: []
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  # Celery Worker - Production
+  celery:
+    env_file:
+      - .env.prod
+    restart: always
+    environment:
+      DEBUG: "False"
+    # Override command to not install dev deps
+    command: celery -A config worker -l info
+    # Remove volumes
+    volumes: []
+
+  # Celery Beat - Production
+  celery-beat:
+    env_file:
+      - .env.prod
+    restart: always
+    environment:
+      DEBUG: "False"
+    # Override command to not install dev deps
+    command: celery -A config beat -l info
+    # Remove volumes
+    volumes: []
+
+  # Nginx - Production
+  nginx:
+    image: nginx:alpine
+    container_name: snapbuy_nginx_prod
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - static_volume_prod:/app/staticfiles:ro
+      - media_volume_prod:/app/media:ro
+      # Uncomment if using SSL:
+      # - ./ssl/cert.pem:/etc/nginx/cert.pem:ro
+      # - ./ssl/key.pem:/etc/nginx/key.pem:ro
+    depends_on:
+      - web
+    environment:
+      - NGINX_HOST=example.com  # Change in .env.prod
+      - NGINX_PORT=80
+
+volumes:
+  postgres_data_prod:
+  redis_data_prod:
+  static_volume_prod:
+  media_volume_prod:
