@@ -181,6 +181,7 @@ UNFOLD = {
     "SITE_TITLE": "SnapBuy Admin",
     "SITE_HEADER": "SnapBuy Backend",
     "SITE_SUBHEADER": "E-commerce Store Management",
+    "THEME": "dark",  # Force dark mode (disables theme switcher)
     "SITE_ICON": {
         "light": lambda request: static("images/logo.svg"),
         "dark": lambda request: static("images/logo.svg"),
