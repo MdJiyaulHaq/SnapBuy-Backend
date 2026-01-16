@@ -115,6 +115,7 @@ class CustomerAdmin(ModelAdmin, ImportExportModelAdmin):
 class OrderItemInline(admin.TabularInline):
     model = models.OrderItem
     autocomplete_fields = ["product"]
+    readonly_fields = ["unit_price"]
     extra = 1
 
 
@@ -130,7 +131,7 @@ class OrderAdmin(ModelAdmin, ImportExportModelAdmin):
 
     @admin.display(ordering="-placed_at")
     def customer_name(self, order):
-        full_name = order.customer.first_name + " " + order.customer.last_name
+        full_name = order.customer.user.first_name + " " + order.customer.user.last_name
         return full_name
 
 

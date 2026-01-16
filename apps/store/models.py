@@ -117,6 +117,12 @@ class OrderItem(models.Model):
     quantity = models.PositiveIntegerField()
     unit_price = models.DecimalField(max_digits=6, decimal_places=2)
 
+    def save(self, *args, **kwargs):
+        # Auto-populate unit_price from product if not set
+        if not self.unit_price and self.product:
+            self.unit_price = self.product.unit_price
+        super().save(*args, **kwargs)
+
 
 class Address(models.Model):
     street = models.CharField(max_length=255)
