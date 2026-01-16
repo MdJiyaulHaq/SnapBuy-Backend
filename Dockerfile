@@ -24,7 +24,7 @@ RUN pip install --upgrade pip setuptools wheel && \
 COPY . .
 
 # Create necessary directories
-RUN mkdir -p logs media staticfiles
+RUN mkdir -p logs media staticfiles static
 
 # Collect static files at build time
 RUN python manage.py collectstatic --noinput --clear || true
@@ -33,4 +33,4 @@ RUN python manage.py collectstatic --noinput --clear || true
 EXPOSE 8000
 
 # Run gunicorn - use $PORT for Render compatibility
-CMD gunicorn config.wsgi:application --bind 0.0.0.0:${PORT:-8000} --workers 4
+CMD ["sh", "-c", "python manage.py migrate && gunicorn config.wsgi:application --bind 0.0.0.0:${PORT:-8000} --workers 2"]
