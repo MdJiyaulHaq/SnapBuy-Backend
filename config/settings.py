@@ -10,6 +10,9 @@ from pathlib import Path
 import dj_database_url
 from celery.schedules import crontab
 from environ import Env
+from django.templatetags.static import static
+from django.urls import reverse_lazy
+from django.utils.translation import gettext_lazy as _
 
 # Build paths
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -30,6 +33,12 @@ CORS_ALLOWED_ORIGINS = env.list(
 
 # Apps
 DJANGO_APPS = [
+    "unfold",  # before django.contrib.admin
+    "unfold.contrib.filters",  # optional, if special filters are needed
+    "unfold.contrib.forms",  # optional, if special form elements are needed
+    "unfold.contrib.inlines",  # optional, if special inlines are needed
+    "unfold.contrib.import_export",  # optional, if django-import-export package is used
+
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -45,6 +54,7 @@ THIRD_PARTY_APPS = [
     "django_filters",
     "djoser",
     "django_redis",
+    "import_export",
 ]
 
 LOCAL_APPS = [
@@ -152,6 +162,119 @@ REST_FRAMEWORK = {
     ],
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 10,
+}
+
+# Unfold Admin Configuration
+UNFOLD = {
+    "SITE_TITLE": "SnapBuy Admin",
+    "SITE_HEADER": "SnapBuy Backend",
+    "SITE_SUBHEADER": "E-commerce Store Management",
+    "SITE_ICON": {
+        "light": lambda request: static("images/snapbuy-icon-light.svg"),
+        "dark": lambda request: static("images/snapbuy-icon-dark.svg"),
+    },
+    "SITE_LOGO": {
+        "light": lambda request: static("images/snapbuy-logo-light.svg"),
+        "dark": lambda request: static("images/snapbuy-logo-dark.svg"),
+    },
+    "SITE_SYMBOL": "shopping_cart",
+    "SITE_FAVICONS": [
+        {
+            "rel": "icon",
+            "sizes": "32x32",
+            "type": "image/svg+xml",
+            "href": lambda request: static("images/favicon.svg"),
+        },
+    ],
+    "SHOW_HISTORY": True,
+    "SHOW_VIEW_ON_SITE": True,
+    "SHOW_BACK_BUTTON": True,
+    "THEME": "dark",
+    "SIDEBAR": {
+        "show_search": True,
+        "show_all_applications": False,
+        "navigation": [
+            {
+                "title": _("Dashboard"),
+                "separator": False,
+                "collapsible": False,
+                "items": [
+                    {
+                        "title": _("Dashboard"),
+                        "icon": "dashboard",
+                        "link": reverse_lazy("admin:index"),
+                        "permission": lambda request: request.user.is_superuser,
+                    },
+                ],
+            },
+            {
+                "title": _("Store Management"),
+                "separator": True,
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": _("Products"),
+                        "icon": "shopping_bag",
+                        "link": reverse_lazy("admin:store_product_changelist"),
+                    },
+                    {
+                        "title": _("Collections"),
+                        "icon": "category",
+                        "link": reverse_lazy("admin:store_collection_changelist"),
+                    },
+                    {
+                        "title": _("Orders"),
+                        "icon": "receipt",
+                        "link": reverse_lazy("admin:store_order_changelist"),
+                    },
+                    {
+                        "title": _("Customers"),
+                        "icon": "people",
+                        "link": reverse_lazy("admin:store_customer_changelist"),
+                    },
+                    {
+                        "title": _("Carts"),
+                        "icon": "shopping_cart",
+                        "link": reverse_lazy("admin:store_cart_changelist"),
+                    },
+                    {
+                        "title": _("Promotions"),
+                        "icon": "local_offer",
+                        "link": reverse_lazy("admin:store_promotion_changelist"),
+                    },
+                    {
+                        "title": _("Addresses"),
+                        "icon": "location_on",
+                        "link": reverse_lazy("admin:store_address_changelist"),
+                    },
+                ],
+            },
+            {
+                "title": _("Content"),
+                "separator": True,
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": _("Tags"),
+                        "icon": "label",
+                        "link": reverse_lazy("admin:tags_tag_changelist"),
+                    },
+                ],
+            },
+            {
+                "title": _("System"),
+                "separator": True,
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": _("Users"),
+                        "icon": "security",
+                        "link": reverse_lazy("admin:core_user_changelist"),
+                    },
+                ],
+            },
+        ],
+    },
 }
 
 # JWT

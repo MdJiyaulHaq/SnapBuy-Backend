@@ -1,4 +1,5 @@
 from django.contrib import admin
+from unfold.admin import ModelAdmin
 from django.db.models import Count
 from django.urls import reverse
 from django.utils.html import format_html, urlencode
@@ -10,7 +11,7 @@ from apps.store.models import (Address, Cart, CartItem, Collection, Customer, Or
 
 # Register your models here.
 @admin.register(Promotion)
-class PromotionAdmin(admin.ModelAdmin):
+class PromotionAdmin(ModelAdmin):
     search_fields = ["description"]
     list_display = ["description", "discount"]
     list_editable = ["discount"]
@@ -18,7 +19,7 @@ class PromotionAdmin(admin.ModelAdmin):
 
 
 @admin.register(Collection)
-class CollectionAdmin(admin.ModelAdmin):
+class CollectionAdmin(ModelAdmin):
     list_display = ["title", "featured_product", "product_count"]
     list_per_page = 10
     search_fields = ["title"]
@@ -51,7 +52,7 @@ class ProductImageInline(admin.TabularInline):
 
 
 @admin.register(Product)
-class ProductAdmin(admin.ModelAdmin):
+class ProductAdmin(ModelAdmin):
     autocomplete_fields = ["collection"]
     actions = ["clear_inventory"]
     inlines = [ProductImageInline]
@@ -88,7 +89,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 
 @admin.register(Customer)
-class CustomerAdmin(admin.ModelAdmin):
+class CustomerAdmin(ModelAdmin):
     list_display = ["first_name", "last_name", "membership", "orders_count"]
     list_editable = ["membership"]
     list_per_page = 10
@@ -107,7 +108,7 @@ class OrderItemInline(admin.TabularInline):
 
 
 @admin.register(Order)
-class OrderAdmin(admin.ModelAdmin):
+class OrderAdmin(ModelAdmin):
     inlines = [OrderItemInline]
     autocomplete_fields = ["customer"]
     list_select_related = ["customer"]
@@ -121,24 +122,24 @@ class OrderAdmin(admin.ModelAdmin):
 
 
 @admin.register(OrderItem)
-class OrderItemAdmin(admin.ModelAdmin):
+class OrderItemAdmin(ModelAdmin):
     list_display = ["id", "order", "product", "quantity", "unit_price"]
     list_per_page = 10
 
 
 @admin.register(Address)
-class AddressAdmin(admin.ModelAdmin):
+class AddressAdmin(ModelAdmin):
     list_display = ["street", "city"]
     list_per_page = 10
 
 
 @admin.register(Cart)
-class CartAdmin(admin.ModelAdmin):
+class CartAdmin(ModelAdmin):
     list_display = ["id", "created_at"]
     list_per_page = 10
 
 
 @admin.register(CartItem)
-class CartItemAdmin(admin.ModelAdmin):
+class CartItemAdmin(ModelAdmin):
     list_display = ["id", "cart", "product", "quantity"]
     list_per_page = 10
