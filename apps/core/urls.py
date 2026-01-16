@@ -4,4 +4,6 @@ from apps.core import views
 
 app_name = "core"
 
-urlpatterns = []
+urlpatterns = [
+    path("health/", views.health_check, name="health_check"),
+]

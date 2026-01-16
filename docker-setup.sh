@@ -25,7 +25,7 @@ fi
 
 # Build and start containers
 echo -e "${BLUE}Building and starting containers...${NC}"
-docker-compose up -d
+docker-compose -f docker-compose.local.yml up -d
 
 # Wait for database to be ready
 echo -e "${BLUE}Waiting for database to be ready...${NC}"
@@ -33,15 +33,15 @@ sleep 10
 
 # Run migrations
 echo -e "${BLUE}Running migrations...${NC}"
-docker-compose exec -T web python manage.py migrate
+docker-compose -f docker-compose.local.yml exec -T web python manage.py migrate
 
 # Create superuser
 echo -e "${BLUE}Creating superuser...${NC}"
-docker-compose exec web python manage.py createsuperuser
+docker-compose -f docker-compose.local.yml exec web python manage.py createsuperuser
 
 # Collect static files
 echo -e "${BLUE}Collecting static files...${NC}"
-docker-compose exec -T web python manage.py collectstatic --noinput
+docker-compose -f docker-compose.local.yml exec -T web python manage.py collectstatic --noinput
 
 echo ""
 echo -e "${GREEN}✅ Docker setup complete!${NC}"
@@ -54,7 +54,7 @@ echo "  📖 ReDoc: http://localhost:8000/api/docs/redoc/"
 echo "  📊 Flower (Celery): http://localhost:5555 (if enabled)"
 echo ""
 echo "Common commands:"
-echo "  docker-compose logs -f web       # View web logs"
-echo "  docker-compose logs -f celery    # View Celery logs"
-echo "  docker-compose exec web bash     # Access container shell"
-echo "  docker-compose down              # Stop all containers"
+echo "  docker-compose -f docker-compose.local.yml logs -f web       # View web logs"
+echo "  docker-compose -f docker-compose.local.yml logs -f celery    # View Celery logs"
+echo "  docker-compose -f docker-compose.local.yml exec web bash     # Access container shell"
+echo "  docker-compose -f docker-compose.local.yml down              # Stop all containers"

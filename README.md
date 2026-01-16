@@ -38,9 +38,8 @@ apps/                        # Modular Django applications
 ├── likes/                 # User likes
 └── playground/            # Testing utilities
 
-docker-compose.yml          # Base Docker Compose (all envs)
-docker-compose.override.yml # Local dev overrides
-docker-compose.prod.yml     # Production overrides
+docker-compose.yml          # Production Docker Compose
+docker-compose.local.yml    # Local dev overrides
 .env.example               # Local dev env template
 .env.prod.example          # Production env template
 ```
@@ -91,29 +90,45 @@ docker-compose down                 # Stop all services
 docker-compose down -v              # Stop and delete volumes
 ```
 
-### 🔒 Option 2: Production Deployment
+### 🔒 Option 2: Production Deployment (Self-Hosted)
 
 **Deploy with Nginx, security hardening, and persistent data.**
 
 ```bash
 # 1. Create and configure production environment
-cp .env.prod.example .env.prod
-# Edit .env.prod with your values:
+cp .env.example .env
+# Edit .env with your production values:
 # - SECRET_KEY: Generate a strong one
 # - POSTGRES_PASSWORD: Use a strong password
 # - ALLOWED_HOSTS: Your domain
-# - DATABASE_URL: Your PostgreSQL connection string
 # - CORS_ALLOWED_ORIGINS: Your frontend domain
 
 # 2. Start production services
-docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+docker-compose up -d
 
 # 3. Run migrations
-docker-compose -f docker-compose.yml -f docker-compose.prod.yml exec web python manage.py migrate
+docker-compose exec web python manage.py migrate
 
 # 4. Create superuser
-docker-compose -f docker-compose.yml -f docker-compose.prod.yml exec web python manage.py createsuperuser
+docker-compose exec web python manage.py createsuperuser
 ```
+
+### ☁️ Option 2b: Deploy to Render
+
+**Deploy using Render's managed infrastructure.**
+
+1. Push your code to GitHub
+2. Go to [Render Dashboard](https://dashboard.render.com)
+3. Click "New" → "Blueprint"
+4. Connect your repository
+5. Render will auto-detect `render.yaml` and create:
+   - Web service (Django API)
+   - Worker services (Celery)
+   - PostgreSQL database
+   - Redis cache
+6. Update environment variables in Render dashboard:
+   - `ALLOWED_HOSTS`: `your-app.onrender.com`
+   - `CORS_ALLOWED_ORIGINS`: Your frontend URL
 
 **Production includes:**
 - Nginx reverse proxy (port 80/443)
@@ -217,7 +232,7 @@ POSTGRES_DB=snapbuy_dev
 POSTGRES_PASSWORD=snapbuy_dev
 ```
 
-### Production (.env.prod)
+### Production (.env)
 ```
 DEBUG=False
 SECRET_KEY=<generate-a-strong-key>
@@ -278,7 +293,7 @@ docker-compose up -d
 
 ## Deployment Checklist
 
-- [ ] Update `.env.prod` with production values
+- [ ] Update `.env` with production values
 - [ ] Generate strong `SECRET_KEY`
 - [ ] Set `DEBUG=False`
 - [ ] Configure `ALLOWED_HOSTS`
@@ -302,9 +317,9 @@ docker-compose logs -f web        # Watch logs
 docker-compose exec web bash      # Access container shell
 
 # Production
-docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
-docker-compose -f docker-compose.yml -f docker-compose.prod.yml down
-docker-compose -f docker-compose.yml -f docker-compose.prod.yml logs -f web
+docker-compose up -d
+docker-compose down
+docker-compose logs -f web
 
 # Management
 docker-compose exec web python manage.py migrate
