@@ -8,12 +8,10 @@ class User(AbstractUser):
 
 
 class Group(BaseGroup):
-    pass
+    """Proxy model to display Groups in the same admin section as Users"""
 
     class Meta:
+        proxy = True
         verbose_name = "Group"
         verbose_name_plural = "Groups"
-
-    def __str__(self):
-        return self.name
 
