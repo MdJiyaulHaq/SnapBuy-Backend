@@ -1,5 +1,8 @@
 from django.contrib import admin
 from unfold.admin import ModelAdmin
+from import_export.admin import ImportExportModelAdmin
+from unfold.contrib.import_export.forms import ExportForm, ImportForm, SelectableFieldsExportForm
+
 from django.db.models import Count
 from django.urls import reverse
 from django.utils.html import format_html, urlencode
@@ -11,7 +14,9 @@ from apps.store.models import (Address, Cart, CartItem, Collection, Customer, Or
 
 # Register your models here.
 @admin.register(Promotion)
-class PromotionAdmin(ModelAdmin):
+class PromotionAdmin(ModelAdmin, ImportExportModelAdmin):
+    import_form_class = ImportForm
+    export_form_class = ExportForm
     search_fields = ["description"]
     list_display = ["description", "discount"]
     list_editable = ["discount"]
@@ -19,7 +24,9 @@ class PromotionAdmin(ModelAdmin):
 
 
 @admin.register(Collection)
-class CollectionAdmin(ModelAdmin):
+class CollectionAdmin(ModelAdmin, ImportExportModelAdmin):
+    import_form_class = ImportForm
+    export_form_class = ExportForm
     list_display = ["title", "featured_product", "product_count"]
     list_per_page = 10
     search_fields = ["title"]
@@ -52,7 +59,9 @@ class ProductImageInline(admin.TabularInline):
 
 
 @admin.register(Product)
-class ProductAdmin(ModelAdmin):
+class ProductAdmin(ModelAdmin, ImportExportModelAdmin):
+    import_form_class = ImportForm
+    export_form_class = ExportForm
     autocomplete_fields = ["collection"]
     actions = ["clear_inventory"]
     inlines = [ProductImageInline]
@@ -89,7 +98,9 @@ class ProductAdmin(ModelAdmin):
 
 
 @admin.register(Customer)
-class CustomerAdmin(ModelAdmin):
+class CustomerAdmin(ModelAdmin, ImportExportModelAdmin):
+    import_form_class = ImportForm
+    export_form_class = ExportForm
     list_display = ["first_name", "last_name", "membership", "orders_count"]
     list_editable = ["membership"]
     list_per_page = 10
@@ -108,7 +119,9 @@ class OrderItemInline(admin.TabularInline):
 
 
 @admin.register(Order)
-class OrderAdmin(ModelAdmin):
+class OrderAdmin(ModelAdmin, ImportExportModelAdmin):
+    import_form_class = ImportForm
+    export_form_class = ExportForm
     inlines = [OrderItemInline]
     autocomplete_fields = ["customer"]
     list_select_related = ["customer"]
@@ -122,24 +135,32 @@ class OrderAdmin(ModelAdmin):
 
 
 @admin.register(OrderItem)
-class OrderItemAdmin(ModelAdmin):
+class OrderItemAdmin(ModelAdmin, ImportExportModelAdmin):
+    import_form_class = ImportForm
+    export_form_class = ExportForm
     list_display = ["id", "order", "product", "quantity", "unit_price"]
     list_per_page = 10
 
 
 @admin.register(Address)
-class AddressAdmin(ModelAdmin):
+class AddressAdmin(ModelAdmin, ImportExportModelAdmin):
+    import_form_class = ImportForm
+    export_form_class = ExportForm
     list_display = ["street", "city"]
     list_per_page = 10
 
 
 @admin.register(Cart)
-class CartAdmin(ModelAdmin):
+class CartAdmin(ModelAdmin, ImportExportModelAdmin):
+    import_form_class = ImportForm
+    export_form_class = ExportForm
     list_display = ["id", "created_at"]
     list_per_page = 10
 
 
 @admin.register(CartItem)
-class CartItemAdmin(ModelAdmin):
+class CartItemAdmin(ModelAdmin, ImportExportModelAdmin):
+    import_form_class = ImportForm
+    export_form_class = ExportForm
     list_display = ["id", "cart", "product", "quantity"]
     list_per_page = 10

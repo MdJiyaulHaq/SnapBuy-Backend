@@ -3,6 +3,9 @@ from uuid import uuid4
 from django.conf import settings
 from django.contrib import admin
 from unfold.admin import ModelAdmin
+from import_export.admin import ImportExportModelAdmin
+from unfold.contrib.import_export.forms import ExportForm, ImportForm, SelectableFieldsExportForm
+
 from django.core.validators import *
 from django.db import models
 
