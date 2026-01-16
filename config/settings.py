@@ -189,7 +189,6 @@ UNFOLD = {
     "SHOW_HISTORY": True,
     "SHOW_VIEW_ON_SITE": True,
     "SHOW_BACK_BUTTON": True,
-    "THEME": "dark",
     "SIDEBAR": {
         "show_search": True,
         "show_all_applications": False,
@@ -270,6 +269,11 @@ UNFOLD = {
                         "title": _("Users"),
                         "icon": "security",
                         "link": reverse_lazy("admin:core_user_changelist"),
+                    },
+                    {
+                        "title": _("Groups"),
+                        "icon": "groups",
+                        "link": reverse_lazy("admin:core_group_changelist"),
                     },
                 ],
             },

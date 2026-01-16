@@ -1,6 +1,7 @@
 from django.contrib import admin
 from unfold.admin import ModelAdmin
-from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin, GroupAdmin as BaseGroupAdmin
+from django.contrib.auth.models import Group as DjangoGroup
 from django.contrib.contenttypes.admin import GenericTabularInline
 from django.utils.html import format_html
 
@@ -8,7 +9,7 @@ from apps.store.admin import ProductAdmin, ProductImageInline
 from apps.store.models import Product
 from apps.tags.models import TaggedItem
 
-from .models import User
+from .models import User, Group
 
 
 class TagInline(GenericTabularInline):
@@ -23,6 +24,9 @@ class CustomProductAdmin(ProductAdmin):
 
 admin.site.unregister(Product)
 admin.site.register(Product, CustomProductAdmin)
+
+# Unregister the default Django Group to avoid duplication
+admin.site.unregister(DjangoGroup)
 
 
 # Register your models here.
@@ -49,3 +53,10 @@ class UserAdmin(BaseUserAdmin):
         ),
     )
     readonly_fields = ["date_joined", "last_login"]
+
+
+@admin.register(Group)
+class GroupAdmin(BaseGroupAdmin):
+    list_display = ["name"]
+    search_fields = ["name"]
+
