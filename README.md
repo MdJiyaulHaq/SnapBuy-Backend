@@ -3,7 +3,7 @@
 Please use the credentials responsibly, expecting professionalism.
 
 https://snapbuy-backend-c28m.onrender.com/admin/
-https://snapbuy-backend-c28m.onrender.com/
+https://snapbuy-backend-c28m.onrender.com/api/docs/
 
 user: test
 password: newuser@123
