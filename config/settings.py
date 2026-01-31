@@ -93,11 +93,11 @@ if DEBUG:
 # URLs
 ROOT_URLCONF = "config.urls"
 
-# Templates - Backend only, no frontend templates
+# Templates
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [

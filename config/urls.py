@@ -10,10 +10,11 @@ from unfold.contrib.import_export.forms import ExportForm, ImportForm, Selectabl
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path, include
-from django.views.generic import RedirectView
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from rest_framework import permissions
+
+from apps.core.views import home
 
 # API Documentation
 schema_view = get_schema_view(
@@ -29,8 +30,8 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
-    # Root redirect
-    path("", RedirectView.as_view(url="api/docs/", permanent=False)),
+    # Home page
+    path("", home, name="home"),
     # Admin
     path("admin/", admin.site.urls),
     # API v1

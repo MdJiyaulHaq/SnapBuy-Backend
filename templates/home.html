@@ -1,0 +1,58 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SnapBuy API</title>
+    <link rel="icon" type="image/svg+xml" href="{% static 'images/favicon.svg' %}">
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>🛒 SnapBuy API</h1>
+            <p class="tagline">Production-ready E-commerce REST API</p>
+        </header>
+
+        <main>
+            <section class="links">
+                <a href="{% url 'schema-swagger-ui' %}" class="card">
+                    <span class="icon">📚</span>
+                    <span class="label">API Documentation</span>
+                </a>
+                <a href="{% url 'admin:index' %}" class="card">
+                    <span class="icon">⚙️</span>
+                    <span class="label">Admin Dashboard</span>
+                </a>
+                <a href="{% url 'core:health_check' %}" class="card">
+                    <span class="icon">💚</span>
+                    <span class="label">Health Check</span>
+                </a>
+            </section>
+
+            <section class="tech-stack">
+                <h2>Built With</h2>
+                <ul>
+                    <li>Django REST Framework</li>
+                    <li>PostgreSQL</li>
+                    <li>Redis & Celery</li>
+                    <li>Docker</li>
+                    <li>JWT Authentication</li>
+                </ul>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2026 SnapBuy. All rights reserved.</p>
+            <p>
+                <a href="https://github.com/MdJiyaulHaq/SnapBuy-Backend" target="_blank">GitHub</a>
+            </p>
+        </footer>
+    </div>
+</body>
+
+</html>
